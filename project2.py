@@ -20,3 +20,15 @@ X = vectorizer.fit_transform(textData)
 kmean3 = KMeans(n_clusters=3,max_iter=100).fit(X)
 kmean33 = KMeans(n_clusters=33,max_iter=100).fit(X)
 kmean57 = KMeans(n_clusters=57,max_iter=100).fit(X)
+
+Xscore = []
+clusters = []
+for i in range(2, 57):
+    clusters.append(i)
+    kmean = KMeans(n_clusters = i).fit(X)
+    Xscore.append(silhouette_score(X, kmean.labels_, metric='manhattan'))
+
+plt.title("Silhoutte Scores for K values")
+plt.xlabel("Clusters")
+plt.ylabel("Scores")
+plt.plot(clusters,Xscore)
