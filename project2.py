@@ -21,9 +21,11 @@ textData = data[:,1]
 vectorizer = CountVectorizer()
 X = vectorizer.fit_transform(textData)
 
+cleanSchoolData = schoolData[:,1]
+cleanDeptData = deptData[:,1]
+cleanPrefixData = prefixData[:,1]
 
 Sscore = []
-ARIscore = []
 clusters = []
 for i in range(2, 58):
     clusters.append(i)
@@ -35,6 +37,8 @@ for i in range(2, 58):
     elif(i == 57):
         kmeans57 = kmean
     Sscore.append(silhouette_score(X, kmean.labels_, metric='manhattan'))
+  
+
     
 
 plt.title("Silhoutte Scores for K values")
@@ -42,10 +46,13 @@ plt.xlabel("Clusters")
 plt.ylabel("Scores")
 plt.plot(clusters,Sscore)
 
-ariX = [3,33,57]
 
-    
-
-cleanSchoolData = schoolData[:,1]
+ARIscore = {'3 Clusters': adjusted_rand_score(cleanSchoolData, kmeans3.labels_) , '33 Clusters': adjusted_rand_score(cleanDeptData, kmeans33.labels_), '57 Clusters': adjusted_rand_score(cleanPrefixData, kmeans57.labels_)}
+ARIC = list(ARIscore.keys())
+ARIval = list(ARIscore.values())
+plt.title("Adjusted Rand Score")
+plt.xlabel("Clusters")
+plt.ylabel("ARI score")
+plt.bar(ARIC,ARIval, color='red')
 
 ld = LatentDirichletAllocation(n_components=20, learning_method="online", n_jobs=-1).fit(X)
