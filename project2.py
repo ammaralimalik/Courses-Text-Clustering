@@ -33,6 +33,8 @@ kmeans33 = 0
 kmeans57 = 0
 
 def run_kmeans():
+    print("Running KMeans()")
+
     Sscore = []
     clusters = []
     for i in range(3, 58):
@@ -45,19 +47,22 @@ def run_kmeans():
             print("Silhoutte Score at 3 clusters: ",  score)
         elif(i == 33):
             kmeans33 = kmean
-            print("Silhoutte Score at 3 clusters: ",  score)
+            print("Silhoutte Score at 33 clusters: ",  score)
         elif(i == 57):
             kmeans57 = kmean
-            print("Silhoutte Score at 3 clusters: ",  score)
+            print("Silhoutte Score at 57 clusters: ",  score)
         
         
         
 
     plot_silhoutteScore(clusters,Sscore)
     plot_ariScores(kmeans3.labels_,kmeans33.labels_,kmeans57.labels_)
+    print()
     
     
 def run_aggClustering():
+    print("Running AgglomerativeClustering()")
+    
     Sscore = []
     clusters = []
     for i in range(3,58):
@@ -77,13 +82,17 @@ def run_aggClustering():
     
     plot_silhoutteScore(clusters, Sscore)
     plot_ariScores(agg3.labels_, agg33.labels_, agg57.labels_)
+    print()
     
+def run_ldaClustering():
+    print("Running lda()")
+    print()
     
 def plot_silhoutteScore(X, y):
     plt.title("Silhoutte Scores")
     plt.xlabel("Clusters")
     plt.ylabel("Scores")
-    plt.plot(X,y,color='green')
+    plt.plot(X,y,color='red')
     plt.show()
 
 def plot_ariScores(label1,label2,label3):
@@ -97,7 +106,10 @@ def plot_ariScores(label1,label2,label3):
     plt.show()
     
         
-
+def run_clustering():
+    run_kmeans()
+    run_aggClustering()
+    run_ldaClustering()
       
         
       
