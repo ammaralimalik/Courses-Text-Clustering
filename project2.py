@@ -38,13 +38,19 @@ def run_kmeans():
     for i in range(3, 58):
         clusters.append(i)
         kmean = KMeans(n_clusters = i).fit(X)
+        score = silhouette_score(X, kmean.labels_, metric='manhattan')
+        Sscore.append(score)
         if(i == 3):
             kmeans3 = kmean
+            print("Silhoutte Score at 3 clusters: ",  score)
         elif(i == 33):
             kmeans33 = kmean
+            print("Silhoutte Score at 3 clusters: ",  score)
         elif(i == 57):
             kmeans57 = kmean
-        Sscore.append(silhouette_score(X, kmean.labels_, metric='manhattan'))
+            print("Silhoutte Score at 3 clusters: ",  score)
+        
+        
         
 
     plot_silhoutteScore(clusters,Sscore)
@@ -57,13 +63,17 @@ def run_aggClustering():
     for i in range(3,58):
         clusters.append(i)
         agg = AgglomerativeClustering(n_clusters = i).fit(X.toarray())
-        Sscore.append(silhouette_score(X, agg.labels_, metric='manhattan'))
+        score = silhouette_score(X, agg.labels_, metric='manhattan')
+        Sscore.append(score)
         if(i == 3):
             agg3 = agg
+            print("Silhoutte Score at 3 clusters: ",  score)
         elif(i == 33):
             agg33 = agg
+            print("Silhoutte Score at 33 clusters: ",  score)
         elif(i == 57):
             agg57 = agg
+            print("Silhoutte Score at 57 clusters: ",  score)
     
     plot_silhoutteScore(clusters, Sscore)
     plot_ariScores(agg3.labels_, agg33.labels_, agg57.labels_)
@@ -73,7 +83,7 @@ def plot_silhoutteScore(X, y):
     plt.title("Silhoutte Scores")
     plt.xlabel("Clusters")
     plt.ylabel("Scores")
-    plt.plot(X,y,color='red')
+    plt.plot(X,y,color='green')
     plt.show()
 
 def plot_ariScores(label1,label2,label3):
