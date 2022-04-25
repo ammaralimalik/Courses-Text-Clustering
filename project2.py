@@ -9,6 +9,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import adjusted_rand_score
 import seaborn as sns
 import mglearn
+import scipy.sparse as sp
 
 data = np.loadtxt("descriptions.txt", dtype="str", delimiter="\t", skiprows=1)
 schoolData = np.loadtxt("school_codes.txt", dtype="str", delimiter="\t", skiprows=1)
@@ -18,7 +19,7 @@ prefixData = np.loadtxt("prefix_codes.txt", dtype="str", delimiter="\t", skiprow
 index = data[:,0]
 textData = data[:,1]
 
-vectorizer = CountVectorizer()
+vectorizer = CountVectorizer(max_features=1000,max_df=.2)
 X = vectorizer.fit_transform(textData)
 
 cleanSchoolData = schoolData[:,1]
@@ -55,4 +56,4 @@ plt.xlabel("Clusters")
 plt.ylabel("ARI score")
 plt.bar(ARIC,ARIval, color='red')
 
-ld = LatentDirichletAllocation(n_components=20, learning_method="online", n_jobs=-1).fit(X)
+lda = LatentDirichletAllocation(n_components=20, learning_method="batch", max_iter=20,n_jobs=-1).fit(X)
