@@ -13,6 +13,7 @@ import scipy.sparse as sp
 from sklearn.cluster import AgglomerativeClustering
 
 
+
 data = np.loadtxt("descriptions.txt", dtype="str", delimiter="\t", skiprows=1)
 schoolData = np.loadtxt("school_codes.txt", dtype="str", delimiter="\t", skiprows=1)
 deptData = np.loadtxt("dept_codes.txt", dtype="str", delimiter="\t", skiprows=1)
@@ -86,6 +87,10 @@ def run_aggClustering():
     
 def run_ldaClustering():
     print("Running lda()")
+    Sscore = []
+    clusters = []
+    for i in range(3,58):
+        lda = LatentDirichletAllocation(n_components=i,learning_method='online').fit(X)
     print()
     
 def plot_silhoutteScore(X, y):
