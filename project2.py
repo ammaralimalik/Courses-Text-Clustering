@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
+from scipy.spatial.distance import cdist
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.metrics import silhouette_score
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import adjusted_rand_score
-import seaborn as sns
 import mglearn
 import scipy.sparse as sp
 from sklearn.cluster import AgglomerativeClustering
@@ -29,16 +29,15 @@ cleanSchoolData = schoolData[:,1]
 cleanDeptData = deptData[:,1]
 cleanPrefixData = prefixData[:,1]
 
-kmeans3 = 0
-kmeans33 = 0
-kmeans57 = 0
-
 def run_kmeans():
     print("Running KMeans()")
 
     Sscore = []
     clusters = []
-    for i in range(3, 58):
+    counter = []
+    inertias = []
+    
+    for i in range(3, 59):
         clusters.append(i)
         kmean = KMeans(n_clusters = i).fit(X)
         score = silhouette_score(X, kmean.labels_, metric='manhattan')
@@ -52,10 +51,11 @@ def run_kmeans():
         elif(i == 57):
             kmeans57 = kmean
             print("Silhoutte Score at 57 clusters: ",  score)
+    
+        inertias.append(kmean.inertia_)
+        counter.append(i)
         
-        
-        
-
+    plot_kmeansElbow(counter, inertias)
     plot_silhoutteScore(clusters,Sscore)
     plot_ariScores(kmeans3.labels_,kmeans33.labels_,kmeans57.labels_)
     print()
@@ -66,7 +66,7 @@ def run_aggClustering():
     
     Sscore = []
     clusters = []
-    for i in range(3,58):
+    for i in range(3,59):
         clusters.append(i)
         agg = AgglomerativeClustering(n_clusters = i).fit(X.toarray())
         score = silhouette_score(X, agg.labels_, metric='manhattan')
@@ -87,11 +87,6 @@ def run_aggClustering():
     
 def run_ldaClustering():
     print("Running lda()")
-    Sscore = []
-    clusters = []
-    for i in range(3,58):
-        lda = LatentDirichletAllocation(n_components=i,learning_method='online').fit(X)
-    print()
     
 def plot_silhoutteScore(X, y):
     plt.title("Silhoutte Scores")
@@ -101,7 +96,14 @@ def plot_silhoutteScore(X, y):
     plt.show()
 
 def plot_ariScores(label1,label2,label3):
-    ARIscore = {'3 Clusters': adjusted_rand_score(cleanSchoolData, label1) , '33 Clusters': adjusted_rand_score(cleanDeptData, label2), '57 Clusters': adjusted_rand_score(cleanPrefixData, label3)}
+    ari3 = adjusted_rand_score(cleanSchoolData, label1)
+    ari33 = adjusted_rand_score(cleanDeptData, label2)
+    ari57 = adjusted_rand_score(cleanPrefixData, label3)
+    print("ARI Score at 3 clusters: ", ari3)
+    print("ARI Score at 33 clusters: ", ari33)
+    print("ARI Score at 57 clusters: ", ari57)
+    print()
+    ARIscore = {'3 Clusters': ari3 , '33 Clusters': ari33, '57 Clusters': ari57}
     ARIC = list(ARIscore.keys())
     ARIval = list(ARIscore.values())
     plt.title("Adjusted Rand Score")
@@ -109,7 +111,15 @@ def plot_ariScores(label1,label2,label3):
     plt.ylabel("ARI score")
     plt.bar(ARIC,ARIval, color='blue')
     plt.show()
-    
+
+def plot_kmeansElbow(k, inertias):
+    plt.plot(k, inertias, 'bx-',color='black')
+    plt.title("Elbow Plot")
+    plt.xlabel("Clusters")
+    plt.ylabel("Distortions")
+    plt.xlim(0,25)
+    plt.show()
+
         
 def run_clustering():
     run_kmeans()
