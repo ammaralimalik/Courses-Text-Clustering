@@ -13,22 +13,29 @@ import scipy.sparse as sp
 from sklearn.cluster import AgglomerativeClustering
 
 
-
+#Load data into variables
 data = np.loadtxt("descriptions.txt", dtype="str", delimiter="\t", skiprows=1)
 schoolData = np.loadtxt("school_codes.txt", dtype="str", delimiter="\t", skiprows=1)
 deptData = np.loadtxt("dept_codes.txt", dtype="str", delimiter="\t", skiprows=1)
 prefixData = np.loadtxt("prefix_codes.txt", dtype="str", delimiter="\t", skiprows=1)
 
+#Seperate the index from the text data
 index = data[:,0]
 textData = data[:,1]
 
+#Use count vectorizer to transform data
 vectorizer = CountVectorizer(max_features=1000,max_df=.2)
 X = vectorizer.fit_transform(textData)
 
+#Clean ground truth data
 cleanSchoolData = schoolData[:,1]
 cleanDeptData = deptData[:,1]
 cleanPrefixData = prefixData[:,1]
 
+print()
+print("Type: run_clustering() to start program (takes a while)")
+
+#Runs KMeans method and returns nothing
 def run_kmeans():
     print("Running KMeans()")
 
@@ -60,7 +67,7 @@ def run_kmeans():
     plot_ariScores(kmeans3.labels_,kmeans33.labels_,kmeans57.labels_)
     print()
     
-    
+  #Runs AgglomerativeClustering method and returns nothing
 def run_aggClustering():
     print("Running AgglomerativeClustering()")
     
@@ -85,16 +92,16 @@ def run_aggClustering():
     plot_ariScores(agg3.labels_, agg33.labels_, agg57.labels_)
     print()
     
-def run_ldaClustering():
-    print("Running lda()")
     
+#Helper function to plot visualizations for scores
 def plot_silhoutteScore(X, y):
     plt.title("Silhoutte Scores")
     plt.xlabel("Clusters")
     plt.ylabel("Scores")
     plt.plot(X,y,color='red')
     plt.show()
-
+    
+#Helper function to plot bar plots for scores
 def plot_ariScores(label1,label2,label3):
     ari3 = adjusted_rand_score(cleanSchoolData, label1)
     ari33 = adjusted_rand_score(cleanDeptData, label2)
@@ -112,6 +119,7 @@ def plot_ariScores(label1,label2,label3):
     plt.bar(ARIC,ARIval, color='blue')
     plt.show()
 
+#Helper function to plot line graph for optimal clusters
 def plot_kmeansElbow(k, inertias):
     plt.plot(k, inertias, 'bx-',color='black')
     plt.title("Elbow Plot")
@@ -120,11 +128,11 @@ def plot_kmeansElbow(k, inertias):
     plt.xlim(0,25)
     plt.show()
 
-        
+ #Runs clustering    
 def run_clustering():
     run_kmeans()
     run_aggClustering()
-    run_ldaClustering()
+   
       
         
       
