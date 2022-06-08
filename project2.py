@@ -132,6 +132,8 @@ def plot_kmeansElbow(k, inertias):
 def run_clustering():
     run_kmeans()
     run_aggClustering()
+
+    
    
       
         
